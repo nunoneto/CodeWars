@@ -2,4 +2,13 @@
     <string name="app_name">CodeWars</string>
     <string name="menu_users">Users</string>
     <string name="menu_challenges">Challenges</string>
+
+    <string name="action_search">Search</string>
+    <string name="action_sort">Sort</string>
+
+    <string name="error_query_too_short">Please input a search query with 3 or more characters</string>
+    <string name="error_search">No results were found</string>
+
+    <string name="user_rank">Rank %1$d</string>
+    <string name="user_best_language">Best Language is %1$s with rank %2$d</string>
 </resources>
