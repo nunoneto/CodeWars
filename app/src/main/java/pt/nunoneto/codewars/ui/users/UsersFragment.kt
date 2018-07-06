@@ -3,10 +3,13 @@ package pt.nunoneto.codewars.ui.users
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.annotation.IntDef
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.util.DiffUtil
+import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
 import android.text.TextUtils
 import android.view.*
@@ -16,14 +19,25 @@ import pt.nunoneto.codewars.entities.User
 
 class UsersFragment : Fragment() {
 
-    private lateinit var viewModel: UsersViewModel;
-
     companion object {
 
         fun newInstance() : UsersFragment {
             return UsersFragment()
         }
+
+        // Sort Types
+        const val DATE_OF_SEARCH = 0
+        const val RANK = 1
     }
+
+    @IntDef(DATE_OF_SEARCH, RANK)
+    annotation class Sort
+
+    private lateinit var viewModel: UsersViewModel
+    private lateinit var recentUserAdapter: RecentUserAdapter
+
+    @Sort
+    private var sortType: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.users_fragment, container, false)
@@ -35,8 +49,13 @@ class UsersFragment : Fragment() {
     }
 
     private fun setUiComponents() {
-        setupViewModel()
         setupToolbar()
+        setupRecycler()
+        setupViewModel()
+    }
+
+    private fun setupRecycler() {
+        rv_recent_searches.layoutManager = LinearLayoutManager(context)
     }
 
     private fun setupViewModel() {
@@ -46,8 +65,12 @@ class UsersFragment : Fragment() {
             user ->
 
                 if (user != null) {
-                    tv_user_name.text = user.name
-                    tv_user_rank.text = getString(R.string.user_rank, user.overallRank)
+                    tv_user_name.text = when (TextUtils.isEmpty(user.name)) {
+                        true -> user.username
+                        else -> user.name
+                    }
+
+                    tv_user_rank.text = getString(R.string.user_rank, user.leaderboardPosition)
                     tv_best_language.text = getString(R.string.user_best_language, user.bestLanguage, user.bestLanguageRank)
 
                     cv_user_search_results.visibility = View.VISIBLE
@@ -61,17 +84,17 @@ class UsersFragment : Fragment() {
     viewModel.searching.observe(this, Observer<Boolean> {
             searching ->
 
-            var visibility = if (searching!!)  View.VISIBLE else View.GONE
+            val visibility = if (searching!!)  View.VISIBLE else View.GONE
 
             pb_load_user.visibility = visibility
 
-            if (searching!! || viewModel.mutableSearchedUser.value != null) {
+            if (searching || viewModel.mutableSearchedUser.value != null) {
                 cv_user_search_results.visibility = View.VISIBLE
             } else {
                 cv_user_search_results.visibility = View.GONE
             }
 
-            if (searching!!) {
+            if (searching) {
                 rl_user_search_results_wrapper.visibility = View.GONE
             }
         })
@@ -83,20 +106,33 @@ class UsersFragment : Fragment() {
                 Snackbar.make(view!!, R.string.error_search, Snackbar.LENGTH_SHORT).show()
             }
         })
+
+        viewModel.getRecentUserSearches(context!!)?.observe(this,
+                Observer<List<User>> { userList ->updateRecentUserList(userList) })
+    }
+
+    private fun getToolbar(): ActionBar? {
+        return (activity as AppCompatActivity).supportActionBar
     }
 
     private fun setupToolbar() {
-        var actionBar: ActionBar = (activity as AppCompatActivity).supportActionBar ?: return
-
-        actionBar.setTitle(R.string.menu_users)
+        getToolbar()?.setTitle(R.string.menu_users)
         setHasOptionsMenu(true)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+
+        if (::recentUserAdapter.isInitialized) {
+            menu?.findItem(R.id.action_sort)?.isVisible = recentUserAdapter.users.isNotEmpty()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         inflater?.inflate(R.menu.users_fragment_menu, menu)
 
-        var searchItem = menu?.findItem(R.id.action_search)
-        var searchView = searchItem?.actionView as SearchView
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
 
         searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
@@ -110,11 +146,93 @@ class UsersFragment : Fragment() {
                     return false
                 }
 
-                viewModel.searchUser(searchQuery)
+                viewModel.searchUser(searchQuery, context)
                 searchItem.collapseActionView()
                 return true
             }
         })
     }
 
+    private fun updateRecentUserList(userList: List<User>?) {
+        var sortedUsers: List<User> = userList ?: ArrayList()
+
+        // set no items view
+        if (sortedUsers.isEmpty()) {
+            tv_no_users_found.visibility = View.VISIBLE
+            rv_recent_searches.visibility = View.GONE
+        } else {
+            tv_no_users_found.visibility = View.GONE
+            rv_recent_searches.visibility = View.VISIBLE
+        }
+
+        // sort users
+        sortedUsers = when (sortType) {
+            DATE_OF_SEARCH -> sortedUsers.sortedByDescending { it.dateOfSearch }
+            RANK -> sortedUsers.sortedBy { it.leaderboardPosition }
+            else -> sortedUsers.sortedByDescending { it.dateOfSearch }
+        }
+
+        // init adapter if needed
+        if (!::recentUserAdapter.isInitialized) {
+            recentUserAdapter = RecentUserAdapter(context, sortedUsers)
+            rv_recent_searches.adapter = recentUserAdapter
+            return
+        }
+
+        // update adapter
+        val oldList = recentUserAdapter.users
+        recentUserAdapter.users = sortedUsers
+
+        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun areItemsTheSame(p0: Int, p1: Int): Boolean {
+                return true
+            }
+
+            override fun getOldListSize(): Int {
+                return oldList.size
+            }
+
+            override fun getNewListSize(): Int {
+                return sortedUsers.size
+            }
+
+            override fun areContentsTheSame(p0: Int, p1: Int): Boolean {
+                return oldList[p0] == sortedUsers[p1]
+            }
+
+        }).dispatchUpdatesTo(recentUserAdapter)
+
+        // update menu actions
+        activity?.invalidateOptionsMenu()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_sort -> {
+                toggleSort()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun toggleSort() {
+        sortType = when (sortType) {
+            RANK -> DATE_OF_SEARCH
+            DATE_OF_SEARCH -> RANK
+            else -> DATE_OF_SEARCH
+        }
+
+        // show sort type msg
+        val sortMsg =  when (sortType) {
+            RANK -> getString(R.string.sorted_by_rank)
+            DATE_OF_SEARCH -> getString(R.string.sorted_by_date)
+            else -> getString(R.string.sorted_by_date)
+        }
+
+        Snackbar.make(view!!,getString(R.string.sorted_by_message, sortMsg), Snackbar.LENGTH_SHORT).show()
+
+        updateRecentUserList(recentUserAdapter.users)
+    }
 }

@@ -8,7 +8,13 @@
 
     <string name="error_query_too_short">Please input a search query with 3 or more characters</string>
     <string name="error_search">No results were found</string>
+    <string name="recent_user_title">Recent Users</string>
+    <string name="no_users_found">No users found</string>
+    <string name="sorted_by_message">Sorted by %1$s</string>
+    <string name="sorted_by_rank">rank</string>
+    <string name="sorted_by_date">date of search</string>
 
     <string name="user_rank">Rank %1$d</string>
-    <string name="user_best_language">Best Language is %1$s with rank %2$d</string>
+    <string name="user_best_language">Best language is %1$s with rank %2$d</string>
+
 </resources>

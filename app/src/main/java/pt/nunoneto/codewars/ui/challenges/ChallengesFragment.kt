@@ -1,4 +1,4 @@
-package pt.nunoneto.codewars.ui
+package pt.nunoneto.codewars.ui.challenges
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

@@ -7,26 +7,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object NetworkHelper {
 
-    var serviceInstance: ICodeWarsService = createCodeWarsService()
+    val serviceInstance: ICodeWarsService by lazy { getRetrofit().create(ICodeWarsService::class.java) }
 
-    fun createCodeWarsService() : ICodeWarsService {
-        return getRetrofit().create(ICodeWarsService::class.java)
-    }
-
-    fun getRetrofit() : Retrofit {
+    private fun getRetrofit() : Retrofit {
         return Retrofit.Builder()
-                .baseUrl("http://www.codewars.com/api/v1/")
+                .baseUrl("https://www.codewars.com/api/v1/")
                 .client(getOkHttpClient())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
     }
 
-    fun getOkHttpClient() : OkHttpClient {
+    private fun getOkHttpClient() : OkHttpClient {
         return OkHttpClient.Builder()
                 .addInterceptor {
                     chain ->
-                        var request = chain.request()
+                        val request = chain.request()
                                 .newBuilder()
                                 .header("Authorization", "Az4qFgST8S5eVnruacci")
                                 .build()

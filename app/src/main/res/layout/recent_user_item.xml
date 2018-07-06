@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/normal_margin">
+
+    <ImageView
+        android:id="@+id/iv_user_image"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/user_avatar"
+        android:adjustViewBounds="true"/>
+
+    <TextView
+        android:id="@+id/tv_user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_toRightOf="@id/iv_user_image"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginBottom="@dimen/xsmall_margin"/>
+
+    <TextView
+        android:id="@+id/tv_user_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/small_margin"
+        android:layout_toRightOf="@id/iv_user_image"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_marginBottom="@dimen/xsmall_margin"
+        android:layout_below="@id/tv_user_name"/>
+
+    <TextView
+        android:id="@+id/tv_best_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/xsmall_margin"
+        android:layout_toRightOf="@id/iv_user_image"
+        android:layout_marginLeft="@dimen/normal_margin"
+        android:layout_below="@id/tv_user_rank"/>
+
+    <View
+        android:id="@+id/v_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/black"
+        android:layout_below="@id/tv_best_language"
+        android:layout_marginTop="@dimen/small_margin"/>
+
+</RelativeLayout>
