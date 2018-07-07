@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="pt.nunoneto.codewars">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,12 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.users.UsersActivity">
+        <activity android:name=".ui.users.UsersActivity"
+            android:resizeableActivity="false"
+            tools:targetApi="n">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.challenges.ChallengesActivity"
+                    android:resizeableActivity="false"
+                    tools:targetApi="n" />
 
     </application>
 

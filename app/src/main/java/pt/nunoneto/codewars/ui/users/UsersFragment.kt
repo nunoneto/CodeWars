@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.text.TextUtils
 import android.view.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.users_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.User
 
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(), View.OnClickListener {
 
     companion object {
 
@@ -174,22 +175,19 @@ class UsersFragment : Fragment() {
 
         // init adapter if needed
         if (!::recentUserAdapter.isInitialized) {
-            recentUserAdapter = RecentUserAdapter(context, sortedUsers)
+            recentUserAdapter = RecentUserAdapter(this, sortedUsers)
             rv_recent_searches.adapter = recentUserAdapter
             return
         }
 
         // update adapter
-        val oldList = recentUserAdapter.users
-        recentUserAdapter.users = sortedUsers
-
-        DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+        var diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun areItemsTheSame(p0: Int, p1: Int): Boolean {
                 return true
             }
 
             override fun getOldListSize(): Int {
-                return oldList.size
+                return recentUserAdapter.users.size
             }
 
             override fun getNewListSize(): Int {
@@ -197,10 +195,12 @@ class UsersFragment : Fragment() {
             }
 
             override fun areContentsTheSame(p0: Int, p1: Int): Boolean {
-                return oldList[p0] == sortedUsers[p1]
+                return recentUserAdapter.users[p0] == sortedUsers[p1]
             }
+        })
 
-        }).dispatchUpdatesTo(recentUserAdapter)
+        recentUserAdapter.users = sortedUsers
+        diff.dispatchUpdatesTo(recentUserAdapter)
 
         // update menu actions
         activity?.invalidateOptionsMenu()
@@ -235,4 +235,20 @@ class UsersFragment : Fragment() {
 
         updateRecentUserList(recentUserAdapter.users)
     }
+
+    // recent item click
+    override fun onClick(view: View?) {
+        if (view == null) {
+            return
+        }
+
+        var position = rv_recent_searches.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION) {
+            return
+        }
+
+        var selectedUser = recentUserAdapter.users[position]
+        viewModel.onRecentListPositionSelected(selectedUser.username, selectedUser.name, context)
+    }
+
 }

@@ -2,13 +2,18 @@ package pt.nunoneto.codewars.ui.challenges
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.challenges_fragment.*
 import pt.nunoneto.codewars.R
+import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment
+import pt.nunoneto.codewars.utils.IntentValues
 
-class ChallengesFragment : Fragment() {
+class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     companion object {
 
@@ -17,22 +22,46 @@ class ChallengesFragment : Fragment() {
         }
     }
 
+    private lateinit var pagerAdapter: ChallengesPagerAdapter
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.challenges_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         setUiComponents()
     }
 
     private fun setUiComponents() {
         setupToolbar()
+        setupPager()
+    }
+
+    private fun setupPager() {
+        val list = listOf(ChallengesListFragment.newInstance(), ChallengesListFragment.newInstance())
+        pagerAdapter = ChallengesPagerAdapter(fragmentManager!!, list)
+        vp_challenges.adapter = pagerAdapter
     }
 
     private fun setupToolbar() {
-        (activity as AppCompatActivity).supportActionBar!!.setTitle(R.string.menu_challenges)
+        val username: String? = activity?.intent?.getStringExtra(IntentValues.EXTRA_USER_USERNAME)
+        val name: String? = activity?.intent?.getStringExtra(IntentValues.EXTRA_USER_NAME)
+
+        var finalName = if (name != null && !TextUtils.isEmpty(name)) name else username
+
+        (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.menu_challenges, finalName)
     }
 
+    override fun onPageScrollStateChanged(position: Int) {
+
+    }
+
+    override fun onPageScrolled(from: Int, p1: Float, to: Int) {
+
+    }
+
+    override fun onPageSelected(position: Int) {
+
+    }
 }

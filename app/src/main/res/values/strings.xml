@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">CodeWars</string>
+
+    <!-- Users -->
     <string name="menu_users">Users</string>
-    <string name="menu_challenges">Challenges</string>
+    <string name="menu_challenges">Challenges for %1$s</string>
+    <string name="menu_challenges_authored">Authored Challenges</string>
+    <string name="menu_challenges_completed">Completed Challenges</string>
 
     <string name="action_search">Search</string>
     <string name="action_sort">Sort</string>
@@ -16,5 +20,9 @@
 
     <string name="user_rank">Rank %1$d</string>
     <string name="user_best_language">Best language is %1$s with rank %2$d</string>
+
+    <!-- Challenges -->
+    <string name="completed_at">Completed at %1$S</string>
+    <string name="no_more_results">No more results</string>
 
 </resources>
