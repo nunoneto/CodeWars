@@ -12,7 +12,7 @@ class CompletedChallenge (id:String,
 
     companion object {
 
-        private val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
+        private val dateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault())
 
         fun fromResponse(challengeResponse: CompletedChallengesResponse.CompletedChallengeItem,
                          languages: List<Language>) : CompletedChallenge {

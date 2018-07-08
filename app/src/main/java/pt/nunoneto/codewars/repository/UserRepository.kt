@@ -71,7 +71,7 @@ object UserRepository {
                     return
                 }
 
-                UserDatabase.getInstance(context)?.userDao()?.inssertUser(user)
+                UserDatabase.getInstance(context)?.userDao()?.insertUser(user)
             }
 
             override fun onError(e: Throwable) {

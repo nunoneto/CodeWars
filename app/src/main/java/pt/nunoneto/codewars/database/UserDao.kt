@@ -14,6 +14,6 @@ interface UserDao {
     fun getLastFiveEntries() : LiveData<List<User>>
 
     @Insert(onConflict = REPLACE)
-    fun inssertUser(user:User)
+    fun insertUser(user:User)
 
 }

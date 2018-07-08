@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.challenges_list_fragment.*
-import kotlinx.android.synthetic.main.users_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.Challenge
 import pt.nunoneto.codewars.ui.challenges.list.viewmodel.ChallengeListViewModel
@@ -26,8 +25,8 @@ class ChallengesListFragment : Fragment(), View.OnClickListener{
         const val CHALLENGE_TYPE_AUTHORED = 1
 
         fun newInstance(challengeType: Int) : ChallengesListFragment {
-            var fragment = ChallengesListFragment()
-            var bundle = Bundle(1)
+            val fragment = ChallengesListFragment()
+            val bundle = Bundle(1)
             bundle.putInt(IntentValues.EXTRA_CHALLENGE_TYPE, challengeType)
             fragment.arguments = bundle
             return fragment
@@ -144,12 +143,12 @@ class ChallengesListFragment : Fragment(), View.OnClickListener{
             return
         }
 
-        var position = rv_challenges.getChildAdapterPosition(view)
+        val position = rv_challenges.getChildAdapterPosition(view)
         if (position == RecyclerView.NO_POSITION) {
             return
         }
 
-        var challenge = challengesAdapter.challenges[position]
+        val challenge = challengesAdapter.challenges[position]
         viewModel.onChallengeSelected(challenge, context)
 
     }

@@ -181,7 +181,7 @@ class UsersFragment : Fragment(), View.OnClickListener {
         }
 
         // update adapter
-        var diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+        val diff = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
             override fun areItemsTheSame(p0: Int, p1: Int): Boolean {
                 return true
             }
@@ -242,12 +242,12 @@ class UsersFragment : Fragment(), View.OnClickListener {
             return
         }
 
-        var position = rv_recent_searches.getChildAdapterPosition(view)
+        val position = rv_recent_searches.getChildAdapterPosition(view)
         if (position == RecyclerView.NO_POSITION) {
             return
         }
 
-        var selectedUser = recentUserAdapter.users[position]
+        val selectedUser = recentUserAdapter.users[position]
         viewModel.onRecentListPositionSelected(selectedUser.username, selectedUser.name, context)
     }
 

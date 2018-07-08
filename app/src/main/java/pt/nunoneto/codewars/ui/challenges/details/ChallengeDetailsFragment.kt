@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.challenge_details_fragment.*
@@ -26,7 +25,6 @@ import pt.nunoneto.codewars.ui.challenges.details.viewmodel.ChallengeDetailsView
 import pt.nunoneto.codewars.ui.challenges.details.viewmodel.ChallengeDetailsViewModelFactory
 import pt.nunoneto.codewars.utils.ColorHelper
 import pt.nunoneto.codewars.utils.IntentValues
-import java.net.URI
 
 class ChallengeDetailsFragment : Fragment() {
 
@@ -151,7 +149,7 @@ class ChallengeDetailsFragment : Fragment() {
     }
 
     private fun openWebUrl(url: String) {
-        var intent = Intent(Intent.ACTION_VIEW)
+        val intent = Intent(Intent.ACTION_VIEW)
         intent.data = (Uri.parse(url))
         startActivity(intent)
     }

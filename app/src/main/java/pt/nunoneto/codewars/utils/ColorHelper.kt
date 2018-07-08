@@ -6,7 +6,7 @@ import java.util.*
 
 object ColorHelper {
 
-    var colorMap = HashMap<String, Int>()
+    private var colorMap = HashMap<String, Int>()
     private val random = Random()
 
     @ColorInt
@@ -15,7 +15,7 @@ object ColorHelper {
             return colorMap[language] ?: 0
         }
 
-        var color = getRandomColor()
+        val color = getRandomColor()
         colorMap[language] = color
         return color
     }

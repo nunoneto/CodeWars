@@ -13,9 +13,9 @@ object ChallengesRepository {
                 .map { response ->
 
                     // transform challenges
-                    var challenges = Observable.just(response.data).flatMapIterable { item -> item }
+                    val challenges = Observable.just(response.data).flatMapIterable { item -> item }
                             .map{ responseItem ->
-                                var languages = getLanguages(responseItem.completedLanguages)
+                                val languages = getLanguages(responseItem.completedLanguages)
                                 CompletedChallenge.fromResponse(responseItem, languages)}
                             .toList().blockingGet()
 

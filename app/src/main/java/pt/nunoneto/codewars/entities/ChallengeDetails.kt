@@ -26,8 +26,8 @@ data class ChallengeDetails(val id: String,
                             val tags: List<String>) {
     companion object {
 
-        private val inputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss")
-        private val outputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+        private val inputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault())
+        private val outputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         fun fromResponse(response: ChallengeResponse, languages: List<Language>) : ChallengeDetails{
 

@@ -10,13 +10,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlinx.android.synthetic.main.challenge_details_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.AuthoredChallenge
 import pt.nunoneto.codewars.entities.Challenge
 import pt.nunoneto.codewars.entities.CompletedChallenge
 import pt.nunoneto.codewars.entities.Language
 import java.text.SimpleDateFormat
+import java.util.*
 
 class ChallengesListAdapter(private val fragment: ChallengesListFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -32,11 +32,11 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
 
     var challenges: ArrayList<Challenge> = ArrayList()
     private var inflater: LayoutInflater = LayoutInflater.from(fragment.context)
-    private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+    private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var adapterMode = ADAPTER_LOAD_MORE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        var viewHolder = if (viewType == LOAD_MORE_ITEM) {
+        val viewHolder = if (viewType == LOAD_MORE_ITEM) {
             LoadMoreViewHolder(inflater.inflate(R.layout.challenge_load_more_item, parent, false))
         } else {
             ChallengeViewHolder(inflater.inflate(R.layout.challenge_list_item, parent, false))
@@ -65,7 +65,7 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int) {
         if (isChallengeItem(position)) {
-            var challenge = challenges[position]
+            val challenge = challenges[position]
             val challengeViewHolder = viewHolder as ChallengeViewHolder
 
             if (challenge is AuthoredChallenge) {
@@ -86,7 +86,7 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
         challengeViewHolder.name.text = challenge.name
 
         //date
-        var completedDate = fragment.getString(R.string.completed_at, dateFormat.format(challenge.completedAt))
+        val completedDate = fragment.getString(R.string.completed_at, dateFormat.format(challenge.completedAt))
         challengeViewHolder.subtitle.text = completedDate
 
         // languages

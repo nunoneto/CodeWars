@@ -70,7 +70,7 @@ class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
         val username: String? = activity?.intent?.getStringExtra(IntentValues.EXTRA_USER_USERNAME)
         val name: String? = activity?.intent?.getStringExtra(IntentValues.EXTRA_USER_NAME)
 
-        var finalName = if (name != null && !TextUtils.isEmpty(name)) name else username
+        val finalName = if (name != null && !TextUtils.isEmpty(name)) name else username
 
         (activity as AppCompatActivity).supportActionBar!!.title = getString(R.string.menu_challenges, finalName)
     }
