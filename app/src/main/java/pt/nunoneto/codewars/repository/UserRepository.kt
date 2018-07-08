@@ -2,10 +2,10 @@ package pt.nunoneto.codewars.repository
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
-import io.reactivex.Observer
+import io.reactivex.Single
 import io.reactivex.SingleObserver
+import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import pt.nunoneto.codewars.database.UserDatabase
 import pt.nunoneto.codewars.entities.User
@@ -14,60 +14,40 @@ import java.util.*
 
 object UserRepository {
 
-    fun searchUser(searchQuery: String, context: Context?, uiObserver: SingleObserver<User>) {
-        val observable = NetworkHelper.serviceInstance
-                .searchUser(searchQuery)
-                .subscribeOn(Schedulers.io())
-                .map { userResponse ->
-                    var language = ""
-                    var languageRank = 0
+    fun searchForUser(username: String, context: Context?, observer: SingleObserver<User>) {
+        Single.create(SingleOnSubscribe<User> {
+            emmiter ->
+            val call = NetworkHelper.serviceInstance.searchForUser(username)
+            val response = call.execute().body()
+            if (response == null) {
+                emmiter.onError(Throwable("Empty Response"))
+                return@SingleOnSubscribe
+            }
 
-                    // find best language
-                    for ((key, value) in userResponse.ranks.languages) {
-                        if (value.score > languageRank) {
-                            language = key
-                            languageRank = value.score
-                        }
-                    }
+            var language = ""
+            var languageRank = 0
 
-                    User.fromUserResponse(userResponse, language, languageRank, Date())
+            // find best language
+            for ((key, value) in response.ranks.languages) {
+                if (value.score > languageRank) {
+                    language = key
+                    languageRank = value.score
                 }
+            }
 
-        // Update UI
-        observable
-                .singleOrError()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(uiObserver)
+            val user = User.fromUserResponse(response, language, languageRank, Date())
+            emmiter.onSuccess(user)
 
-        // Update recent users db
-        if (context != null) {
-            observable
-                    .observeOn(Schedulers.io())
-                    .subscribe(getUpdateRecentUsersObserver(context))
-        }
+            if (context != null) {
+                UserDatabase.getInstance(context)?.userDao()?.insertUser(user)
+            }
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(observer)
     }
 
     fun getRecentUserSearches(context: Context): LiveData<List<User>>? {
         return UserDatabase.getInstance(context)?.userDao()?.getLastFiveEntries()
-    }
-
-    private fun getUpdateRecentUsersObserver(context: Context) : Observer<User> {
-        return object: Observer<User> {
-            override fun onComplete() {
-                // do nothing
-            }
-
-            override fun onSubscribe(d: Disposable) {
-                // do nothing
-            }
-
-            override fun onNext(user: User) {
-                UserDatabase.getInstance(context)?.userDao()?.insertUser(user)
-            }
-
-            override fun onError(e: Throwable) {
-                // do nothing
-            }
-        }
     }
 }

@@ -41,7 +41,7 @@ class UsersViewModel : ViewModel() {
             }
         }
 
-        UserRepository.searchUser(query, context, observer)
+        UserRepository.searchForUser(query, context, observer)
     }
 
     fun getRecentUserSearches(context: Context) : LiveData<List<User>>? {

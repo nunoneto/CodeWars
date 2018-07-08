@@ -5,6 +5,7 @@ import pt.nunoneto.codewars.network.response.AuthoredChallengesResponse
 import pt.nunoneto.codewars.network.response.ChallengeDetailsResponse
 import pt.nunoneto.codewars.network.response.CompletedChallengesResponse
 import pt.nunoneto.codewars.network.response.UserResponse
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -12,7 +13,7 @@ import retrofit2.http.Query
 interface ICodeWarsService {
 
     @GET("users/{username}")
-    fun searchUser(@Path("username") username: String) : Observable<UserResponse>
+    fun searchForUser(@Path("username") username: String) : Call<UserResponse>
 
     @GET("users/{username}/code-challenges/completed")
     fun getCompletedChallengesByUser(@Path("username") username: String,
