@@ -36,13 +36,7 @@ class RecentUserAdapter(private var fragment: UsersFragment?, var users: List<Us
         }
     }
 
-    override fun getItemCount(): Int {
-        if (users == null){
-          return 0
-        }
-
-        return users.size
-    }
+    override fun getItemCount(): Int = users.size
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById(R.id.tv_user_name)

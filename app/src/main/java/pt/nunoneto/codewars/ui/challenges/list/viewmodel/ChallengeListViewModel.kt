@@ -14,7 +14,8 @@ import pt.nunoneto.codewars.entities.Challenge
 import pt.nunoneto.codewars.entities.CompletedChallengePage
 import pt.nunoneto.codewars.repository.ChallengesRepository
 import pt.nunoneto.codewars.ui.challenges.details.ChallengeDetailsActivity
-import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge.Companion.CHALLENGE_TYPE_AUTHORED
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge.Companion.CHALLENGE_TYPE_COMPLETED
 import pt.nunoneto.codewars.utils.IntentValues
 import pt.nunoneto.codewars.utils.SingleLiveEvent
 
@@ -38,7 +39,7 @@ class ChallengeListViewModel (val username: String, private val challengeType: I
 
     private fun doLoadPage() {
         error.value = false
-        if (challengeType == ChallengesListFragment.CHALLENGE_TYPE_COMPLETED) {
+        if (challengeType == CHALLENGE_TYPE_COMPLETED) {
             ChallengesRepository.getCompletedChallengesByUser(username, nextPage)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +91,7 @@ class ChallengeListViewModel (val username: String, private val challengeType: I
 
     fun loadNextPage() {
         Log.d(TAG, "loadNextPage page=$nextPage")
-        if (challengeType == ChallengesListFragment.CHALLENGE_TYPE_AUTHORED) {
+        if (challengeType == CHALLENGE_TYPE_AUTHORED) {
             return
         }
 

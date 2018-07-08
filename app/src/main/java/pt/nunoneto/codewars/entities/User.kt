@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.text.TextUtils
 import pt.nunoneto.codewars.network.response.UserResponse
+import java.util.*
 
 @Entity(tableName = "recentUserData")
 data class User(@PrimaryKey var username: String,
@@ -12,11 +13,11 @@ data class User(@PrimaryKey var username: String,
                 @ColumnInfo var leaderboardPosition: Int,
                 @ColumnInfo var bestLanguage: String,
                 @ColumnInfo var bestLanguageRank: Int,
-                @ColumnInfo var dateOfSearch: Long) {
+                @ColumnInfo var dateOfSearch: Date) {
 
     companion object {
 
-        fun fromUserResponse(userResponse: UserResponse, bestLanguage: String, bestLanguageRank: Int, dateOfSearch: Long) : User {
+        fun fromUserResponse(userResponse: UserResponse, bestLanguage: String, bestLanguageRank: Int, dateOfSearch: Date) : User {
             return User(userResponse.username,
                     userResponse.name,
                     userResponse.leaderboardPosition,

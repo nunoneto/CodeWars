@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.challenges_list_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.Challenge
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge.ChallengeType
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge.Companion.CHALLENGE_TYPE_COMPLETED
 import pt.nunoneto.codewars.ui.challenges.list.viewmodel.ChallengeListViewModel
 import pt.nunoneto.codewars.ui.challenges.list.viewmodel.ChallengeViewModelFactory
 import pt.nunoneto.codewars.utils.IntentValues
@@ -20,9 +22,6 @@ import pt.nunoneto.codewars.utils.IntentValues
 class ChallengesListFragment : Fragment(), View.OnClickListener{
 
     companion object {
-
-        const val CHALLENGE_TYPE_COMPLETED = 0
-        const val CHALLENGE_TYPE_AUTHORED = 1
 
         fun newInstance(challengeType: Int) : ChallengesListFragment {
             val fragment = ChallengesListFragment()
@@ -35,6 +34,8 @@ class ChallengesListFragment : Fragment(), View.OnClickListener{
 
     private lateinit var viewModel: ChallengeListViewModel
     private lateinit var challengesAdapter: ChallengesListAdapter
+
+    @ChallengeType
     private var challengeType: Int = CHALLENGE_TYPE_COMPLETED
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

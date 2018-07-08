@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.challenges_fragment.*
 import pt.nunoneto.codewars.R
-import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment
+import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment.Companion.newInstance
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge
+import pt.nunoneto.codewars.ui.challenges.list.viewmodel.Challenge.Companion.CHALLENGE_TYPE_AUTHORED
 import pt.nunoneto.codewars.utils.IntentValues
 
 class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
@@ -58,8 +60,8 @@ class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
 
     private fun setupPager() {
         val list = listOf(
-                ChallengesListFragment.newInstance(ChallengesListFragment.CHALLENGE_TYPE_COMPLETED),
-                ChallengesListFragment.newInstance(ChallengesListFragment.CHALLENGE_TYPE_AUTHORED))
+                newInstance(Challenge.CHALLENGE_TYPE_COMPLETED),
+                newInstance(CHALLENGE_TYPE_AUTHORED))
 
         pagerAdapter = ChallengesPagerAdapter(fragmentManager!!, list)
         vp_challenges.adapter = pagerAdapter

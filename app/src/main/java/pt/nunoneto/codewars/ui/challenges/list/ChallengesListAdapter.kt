@@ -2,6 +2,7 @@ package pt.nunoneto.codewars.ui.challenges.list
 
 import android.content.res.ColorStateList
 import android.os.Build
+import android.support.annotation.IntDef
 import android.support.design.chip.Chip
 import android.support.design.chip.ChipGroup
 import android.support.v7.widget.RecyclerView
@@ -30,12 +31,20 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
         const val ADAPTER_DONT_LOAD_MORE = 1
     }
 
+    @IntDef(ADAPTER_DONT_LOAD_MORE, ADAPTER_LOAD_MORE)
+    annotation class AdapterMode
+
+    @IntDef(CHALLENGE_ITEM, LOAD_MORE_ITEM)
+    annotation class ViewType
+
     var challenges: ArrayList<Challenge> = ArrayList()
     private var inflater: LayoutInflater = LayoutInflater.from(fragment.context)
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
+    @AdapterMode
     var adapterMode = ADAPTER_LOAD_MORE
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, @ViewType viewType: Int): RecyclerView.ViewHolder {
         val viewHolder = if (viewType == LOAD_MORE_ITEM) {
             LoadMoreViewHolder(inflater.inflate(R.layout.challenge_load_more_item, parent, false))
         } else {
@@ -109,6 +118,7 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
         challengeViewHolder.subtitle.text =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(challenge.description, Html.FROM_HTML_MODE_COMPACT)
         } else {
+            @Suppress("DEPRECATION")
             Html.fromHtml(challenge.description)
         }
 

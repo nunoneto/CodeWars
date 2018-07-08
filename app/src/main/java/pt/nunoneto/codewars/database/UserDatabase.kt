@@ -3,10 +3,12 @@ package pt.nunoneto.codewars.database
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.content.Context
 import pt.nunoneto.codewars.entities.User
 
-@Database(entities = [(User::class)], version = 1)
+@Database(entities = [(User::class)], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

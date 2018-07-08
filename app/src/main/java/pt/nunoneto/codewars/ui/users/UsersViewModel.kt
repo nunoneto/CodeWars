@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.content.Context
 import android.content.Intent
-import io.reactivex.Observer
+import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import pt.nunoneto.codewars.entities.User
 import pt.nunoneto.codewars.repository.UserRepository
@@ -24,22 +24,19 @@ class UsersViewModel : ViewModel() {
         mutableSearchedUser.value = null
         searching.value = true
 
-        val observer = object: Observer<User> {
-            override fun onSubscribe(d: Disposable) {
-                // do nothing
+        val observer = object: SingleObserver<User> {
+            override fun onSuccess(user: User) {
+                mutableSearchedUser.value = user
+                searching.value = false
             }
 
-            override fun onNext(user: User) {
-                mutableSearchedUser.value = user
+            override fun onSubscribe(d: Disposable) {
+                // do nothing
             }
 
             override fun onError(e: Throwable) {
                 e.printStackTrace()
                 error.value = true
-                searching.value = false
-            }
-
-            override fun onComplete() {
                 searching.value = false
             }
         }

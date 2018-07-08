@@ -256,5 +256,4 @@ class UsersFragment : Fragment(), View.OnClickListener {
         val selectedUser = recentUserAdapter.users[position]
         viewModel.onRecentListPositionSelected(selectedUser.username, selectedUser.name, context)
     }
-
 }
