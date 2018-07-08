@@ -42,7 +42,9 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
             ChallengeViewHolder(inflater.inflate(R.layout.challenge_list_item, parent, false))
         }
 
-        viewHolder.itemView.setOnClickListener(fragment)
+        if (viewHolder is ChallengeViewHolder) {
+            viewHolder.itemView.setOnClickListener(fragment)
+        }
 
         return viewHolder
     }

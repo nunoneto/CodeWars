@@ -65,7 +65,8 @@ class ChallengesListFragment : Fragment(), View.OnClickListener{
 
     private fun setUiComponents() {
         challengesAdapter = ChallengesListAdapter(this)
-        challengesAdapter.adapterMode = if (challengeType == CHALLENGE_TYPE_COMPLETED)
+        challengesAdapter.adapterMode = if (challengeType == CHALLENGE_TYPE_COMPLETED
+                && viewModel.noMorePages.value == false)
             ChallengesListAdapter.ADAPTER_LOAD_MORE
         else
             ChallengesListAdapter.ADAPTER_DONT_LOAD_MORE
@@ -150,6 +151,5 @@ class ChallengesListFragment : Fragment(), View.OnClickListener{
 
         val challenge = challengesAdapter.challenges[position]
         viewModel.onChallengeSelected(challenge, context)
-
     }
 }

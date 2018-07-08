@@ -16,6 +16,7 @@ import pt.nunoneto.codewars.repository.ChallengesRepository
 import pt.nunoneto.codewars.ui.challenges.details.ChallengeDetailsActivity
 import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment
 import pt.nunoneto.codewars.utils.IntentValues
+import pt.nunoneto.codewars.utils.SingleLiveEvent
 
 class ChallengeListViewModel (val username: String, private val challengeType: Int) : ViewModel() {
 
@@ -24,13 +25,14 @@ class ChallengeListViewModel (val username: String, private val challengeType: I
     }
 
     val challenges: MutableLiveData<List<Challenge>> = MutableLiveData()
-    val noMorePages: MutableLiveData<Boolean> = MutableLiveData()
-    val error: MutableLiveData<Boolean> = MutableLiveData()
+    val noMorePages: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    val error: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     var nextPage: Int = 0
     var maxPages: Int = 0
 
     init {
+        noMorePages.value = false
         doLoadPage()
     }
 
@@ -50,8 +52,6 @@ class ChallengeListViewModel (val username: String, private val challengeType: I
                         }
 
                         override fun onSuccess(challengePage: CompletedChallengePage) {
-                            Log.d(TAG, "onSuccess $nextPage")
-
                             if (maxPages == 0) {
                                 maxPages = challengePage.maxPages
                             }
@@ -95,7 +95,8 @@ class ChallengeListViewModel (val username: String, private val challengeType: I
         }
 
         if (nextPage >= maxPages) {
-            noMorePages.value = true
+            if (noMorePages.value == false)
+                noMorePages.value = true
             return
         }
 

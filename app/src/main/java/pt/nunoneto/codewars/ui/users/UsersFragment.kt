@@ -63,23 +63,7 @@ class UsersFragment : Fragment(), View.OnClickListener {
         viewModel = ViewModelProviders.of(this).get(UsersViewModel::class.java)
 
         viewModel.mutableSearchedUser.observe(this, Observer<User> {
-            user ->
-
-                if (user != null) {
-                    tv_user_name.text = when (TextUtils.isEmpty(user.name)) {
-                        true -> user.username
-                        else -> user.name
-                    }
-
-                    tv_user_rank.text = getString(R.string.user_rank, user.leaderboardPosition)
-                    tv_best_language.text = getString(R.string.user_best_language, user.bestLanguage, user.bestLanguageRank)
-
-                    cv_user_search_results.visibility = View.VISIBLE
-                    rl_user_search_results_wrapper.visibility = View.VISIBLE
-
-                } else {
-                    cv_user_search_results.visibility = View.GONE
-                }
+            user -> setupUser(user)
         })
 
     viewModel.searching.observe(this, Observer<Boolean> {
@@ -110,6 +94,28 @@ class UsersFragment : Fragment(), View.OnClickListener {
 
         viewModel.getRecentUserSearches(context!!)?.observe(this,
                 Observer<List<User>> { userList ->updateRecentUserList(userList) })
+    }
+
+    private fun setupUser(user: User?) {
+        if (user != null) {
+            tv_user_name.text = when (TextUtils.isEmpty(user.name)) {
+                true -> user.username
+                else -> user.name
+            }
+
+            tv_user_rank.text = getString(R.string.user_rank, user.leaderboardPosition)
+            tv_best_language.text = getString(R.string.user_best_language, user.bestLanguage, user.bestLanguageRank)
+
+            cv_user_search_results.visibility = View.VISIBLE
+            rl_user_search_results_wrapper.visibility = View.VISIBLE
+
+            cv_user_search_results.setOnClickListener {
+                viewModel.onRecentListPositionSelected(user.username, user.name, context)
+            }
+
+        } else {
+            cv_user_search_results.visibility = View.GONE
+        }
     }
 
     private fun getToolbar(): ActionBar? {

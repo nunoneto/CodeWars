@@ -1,6 +1,6 @@
 package pt.nunoneto.codewars.entities
 
-import pt.nunoneto.codewars.network.response.ChallengeResponse
+import pt.nunoneto.codewars.network.response.ChallengeDetailsResponse
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,7 +29,7 @@ data class ChallengeDetails(val id: String,
         private val inputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault())
         private val outputDateFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        fun fromResponse(response: ChallengeResponse, languages: List<Language>) : ChallengeDetails{
+        fun fromResponse(response: ChallengeDetailsResponse, languages: List<Language>) : ChallengeDetails{
 
 
             val publishedDate: String = parseDate(response.publishedAt)

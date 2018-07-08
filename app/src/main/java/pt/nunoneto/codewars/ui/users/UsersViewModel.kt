@@ -11,13 +11,14 @@ import pt.nunoneto.codewars.entities.User
 import pt.nunoneto.codewars.repository.UserRepository
 import pt.nunoneto.codewars.ui.challenges.ChallengesActivity
 import pt.nunoneto.codewars.utils.IntentValues
+import pt.nunoneto.codewars.utils.SingleLiveEvent
 
 class UsersViewModel : ViewModel() {
 
     var mutableSearchedUser: MutableLiveData<User> = MutableLiveData()
 
-    var searching: MutableLiveData<Boolean> = MutableLiveData()
-    var error: MutableLiveData<Boolean> = MutableLiveData()
+    var searching: SingleLiveEvent<Boolean> = SingleLiveEvent()
+    var error: SingleLiveEvent<Boolean> = SingleLiveEvent()
 
     fun searchUser(query:String, context: Context?) {
         mutableSearchedUser.value = null
