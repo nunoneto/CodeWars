@@ -20,13 +20,21 @@ class ChallengesListFragment : Fragment() {
 
     companion object {
 
-        fun newInstance() : ChallengesListFragment {
-            return ChallengesListFragment()
+        const val CHALLENGE_TYPE_COMPLETED = 0
+        const val CHALLENGE_TYPE_AUTHORED = 1
+
+        fun newInstance(challengeType: Int) : ChallengesListFragment {
+            var fragment = ChallengesListFragment()
+            var bundle = Bundle(1)
+            bundle.putInt(IntentValues.EXTRA_CHALLENGE_TYPE, challengeType)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
     private lateinit var viewModel: ChallengeListViewModel
     private lateinit var challengesAdapter: ChallengesListAdapter
+    private var challengeType: Int = CHALLENGE_TYPE_COMPLETED
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.challenges_list_fragment, container, false)
@@ -40,7 +48,11 @@ class ChallengesListFragment : Fragment() {
             false -> activity!!.intent.getStringExtra(IntentValues.EXTRA_USER_USERNAME)
         }
 
-        viewModel = ViewModelProviders.of(this, ChallengeViewModelFactory(username)).get(ChallengeListViewModel::class.java)
+        challengeType = arguments?.getInt(IntentValues.EXTRA_CHALLENGE_TYPE, CHALLENGE_TYPE_COMPLETED) ?: CHALLENGE_TYPE_COMPLETED
+
+        viewModel = ViewModelProviders
+                .of(this, ChallengeViewModelFactory(username, challengeType))
+                .get(ChallengeListViewModel::class.java)
 
         setObservers()
         setUiComponents()
@@ -51,8 +63,14 @@ class ChallengesListFragment : Fragment() {
     }
 
     private fun setUiComponents() {
-        val layoutManager = LinearLayoutManager(context)
         challengesAdapter = ChallengesListAdapter(this)
+        challengesAdapter.adapterMode = if (challengeType == CHALLENGE_TYPE_COMPLETED)
+            ChallengesListAdapter.ADAPTER_LOAD_MORE
+        else
+            ChallengesListAdapter.ADAPTER_DONT_LOAD_MORE
+
+
+        val layoutManager = LinearLayoutManager(context)
         rv_challenges.layoutManager = layoutManager
         rv_challenges.adapter = challengesAdapter
     }
@@ -71,7 +89,7 @@ class ChallengesListFragment : Fragment() {
     private fun noMorePages() {
         Snackbar.make(view!!, R.string.no_more_results, Snackbar.LENGTH_SHORT).show()
         rv_challenges.post{
-            challengesAdapter.adapterMode = ChallengesListAdapter.ADAPTER_MORE_NO_MORE_RESULTS
+            challengesAdapter.adapterMode = ChallengesListAdapter.ADAPTER_DONT_LOAD_MORE
             challengesAdapter.notifyItemRemoved(challengesAdapter.itemCount)
         }
     }

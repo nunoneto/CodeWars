@@ -3,7 +3,7 @@
 
     <!-- Users -->
     <string name="menu_users">Users</string>
-    <string name="menu_challenges">Challenges for %1$s</string>
+    <string name="menu_challenges">%1$s\'s Challenges</string>
     <string name="menu_challenges_authored">Authored Challenges</string>
     <string name="menu_challenges_completed">Completed Challenges</string>
 

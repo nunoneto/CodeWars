@@ -36,12 +36,34 @@ class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
     private fun setUiComponents() {
         setupToolbar()
         setupPager()
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.action_authored_challenges -> {
+                    vp_challenges.currentItem = 1
+                    true
+                }
+
+                R.id.action_completed_challenges -> {
+                    vp_challenges.currentItem = 0
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setupPager() {
-        val list = listOf(ChallengesListFragment.newInstance(), ChallengesListFragment.newInstance())
+        val list = listOf(
+                ChallengesListFragment.newInstance(ChallengesListFragment.CHALLENGE_TYPE_COMPLETED),
+                ChallengesListFragment.newInstance(ChallengesListFragment.CHALLENGE_TYPE_AUTHORED))
+
         pagerAdapter = ChallengesPagerAdapter(fragmentManager!!, list)
         vp_challenges.adapter = pagerAdapter
+        vp_challenges.addOnPageChangeListener(this)
     }
 
     private fun setupToolbar() {
@@ -54,14 +76,18 @@ class ChallengesFragment : Fragment(), ViewPager.OnPageChangeListener {
     }
 
     override fun onPageScrollStateChanged(position: Int) {
-
+        // do nothing
     }
 
     override fun onPageScrolled(from: Int, p1: Float, to: Int) {
-
+        // do nothing
     }
 
     override fun onPageSelected(position: Int) {
-
+        bottom_navigation.selectedItemId = when (position) {
+            0 -> R.id.action_completed_challenges
+            1 -> R.id.action_authored_challenges
+            else -> R.id.action_completed_challenges
+        }
     }
 }

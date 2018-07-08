@@ -2,15 +2,16 @@ package pt.nunoneto.codewars.repository
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import pt.nunoneto.codewars.entities.AuthoredChallenge
 import pt.nunoneto.codewars.utils.LanguageColorHelper
-import pt.nunoneto.codewars.entities.Challenge
-import pt.nunoneto.codewars.entities.ChallengePage
+import pt.nunoneto.codewars.entities.CompletedChallenge
+import pt.nunoneto.codewars.entities.CompletedChallengePage
 import pt.nunoneto.codewars.entities.Language
 import pt.nunoneto.codewars.network.NetworkHelper
 
 object ChallengesRepository {
 
-    fun getChallengesByUser(username: String, page: Int) : Single<ChallengePage> {
+    fun getCompletedChallengesByUser(username: String, page: Int) : Single<CompletedChallengePage> {
         return NetworkHelper.serviceInstance.getCompletedChallengesByUser(username, page)
                 .map { response ->
 
@@ -18,11 +19,20 @@ object ChallengesRepository {
                     var challenges = Observable.just(response.data).flatMapIterable { item -> item }
                             .map{ responseItem ->
                                 var languages = getLanguages(responseItem.completedLanguages)
-                                Challenge.fromResponse(responseItem, languages)}
+                                CompletedChallenge.fromResponse(responseItem, languages)}
                             .toList().blockingGet()
 
-                    ChallengePage(challenges, response.totalPages)
+                    CompletedChallengePage(challenges, response.totalPages)
                 }
+                .singleOrError()
+    }
+
+    fun getAuthoredChallengesByUser(username: String) : Single<List<AuthoredChallenge>> {
+        return NetworkHelper.serviceInstance.getAuthoredChallengesByUser(username)
+                .flatMapIterable { response -> response.data }
+                .map { item -> AuthoredChallenge.fromResponse(item, getLanguages(item.languages))}
+                .toList()
+                .toObservable()
                 .singleOrError()
     }
 
