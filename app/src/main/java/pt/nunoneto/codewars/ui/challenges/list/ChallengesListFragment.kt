@@ -6,17 +6,19 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.challenges_list_fragment.*
+import kotlinx.android.synthetic.main.users_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.Challenge
 import pt.nunoneto.codewars.ui.challenges.list.viewmodel.ChallengeListViewModel
 import pt.nunoneto.codewars.ui.challenges.list.viewmodel.ChallengeViewModelFactory
 import pt.nunoneto.codewars.utils.IntentValues
 
-class ChallengesListFragment : Fragment() {
+class ChallengesListFragment : Fragment(), View.OnClickListener{
 
     companion object {
 
@@ -135,5 +137,20 @@ class ChallengesListFragment : Fragment() {
         challengesAdapter.challenges.clear()
         challengesAdapter.challenges.addAll(challengesList)
         challengesAdapter.notifyItemRangeInserted(startRange, challengesAdapter.itemCount - 1)
+    }
+
+    override fun onClick(view: View?) {
+        if (view == null) {
+            return
+        }
+
+        var position = rv_challenges.getChildAdapterPosition(view)
+        if (position == RecyclerView.NO_POSITION) {
+            return
+        }
+
+        var challenge = challengesAdapter.challenges[position]
+        viewModel.onChallengeSelected(challenge, context)
+
     }
 }

@@ -27,4 +27,20 @@
     <string name="error_load_challenges">Could not load results</string>
     <string name="challenges_no_results">No results found</string>
 
+    <!-- Challenge Details -->
+
+    <string name="challenge_details">Challenge Details</string>
+    <string name="loading_challenge">Loading challenge...</string>
+    <string name="created">Created by %1$s on %2$s</string>
+    <string name="approved">Approved by %1$s on %2$s</string>
+    <string name="published">Published on %1$s</string>
+    <string name="languages">Languages</string>
+    <string name="tags">Tags</string>
+    <string name="stats">Stats</string>
+    <string name="management">Management</string>
+    <string name="attempts">%1$s attempts with %2$s completed</string>
+    <string name="votes">%1$s vote score</string>
+    <string name="stars">%1$s stars</string>
+    <string name="error_load_challenge">Sorry, could not load the challenge :(</string>
+
 </resources>

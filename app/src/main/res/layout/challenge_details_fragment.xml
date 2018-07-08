@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable name="details" type="pt.nunoneto.codewars.entities.ChallengeDetails"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#c4c4c4">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ProgressBar
+                android:id="@+id/pb_loading_challenge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/normal_margin"/>
+
+            <TextView
+                android:id="@+id/tv_error_load_challenge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_margin="@dimen/normal_margin"
+                android:visibility="gone"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_general_details"
+                style="@style/Challenge.Details.Item">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:text="@{details.name}"/>
+
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textStyle="italic"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{details.description}" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_general_management"
+                style="@style/Challenge.Details.Item">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/management"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <TextView
+                        android:id="@+id/tv_created"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_link"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        android:layout_marginBottom="@dimen/small_margin"
+                        android:text="@{String.format(@string/created, details.createdByUser, details.createdAt)}"/>
+
+                    <TextView
+                        android:id="@+id/tv_approved"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableRight="@drawable/ic_link"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        android:layout_marginBottom="@dimen/small_margin"
+                        android:text="@{String.format(@string/approved, details.approvedByUser, details.approvedAt)}"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.format(@string/published, details.publishedAt)}"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_general_stats"
+                style="@style/Challenge.Details.Item">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stats"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{String.format(@string/attempts, details.totalAttempts, details.totalCompleted)}"/>
+
+                    <ProgressBar
+                        android:id="@+id/pb_attempts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:max="@{details.totalAttempts}"
+                        android:progress="@{details.totalCompleted}"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_star"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        android:layout_marginBottom="@dimen/small_margin"
+                        android:text="@{String.format(@string/stars, details.totalStars)}"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_vote"
+                        android:drawablePadding="@dimen/xsmall_margin"
+                        android:text="@{String.format(@string/votes, details.voteScore)}"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_general_languages"
+                style="@style/Challenge.Details.Item">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/languages"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <android.support.design.chip.ChipGroup
+                        android:id="@+id/cg_languages"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_general_tags"
+                style="@style/Challenge.Details.Item">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tags"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="@dimen/small_margin"/>
+
+                    <android.support.design.chip.ChipGroup
+                        android:id="@+id/cg_tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</layout>

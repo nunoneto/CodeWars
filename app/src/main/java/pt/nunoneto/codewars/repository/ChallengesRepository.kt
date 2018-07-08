@@ -2,11 +2,8 @@ package pt.nunoneto.codewars.repository
 
 import io.reactivex.Observable
 import io.reactivex.Single
-import pt.nunoneto.codewars.entities.AuthoredChallenge
-import pt.nunoneto.codewars.utils.LanguageColorHelper
-import pt.nunoneto.codewars.entities.CompletedChallenge
-import pt.nunoneto.codewars.entities.CompletedChallengePage
-import pt.nunoneto.codewars.entities.Language
+import pt.nunoneto.codewars.entities.*
+import pt.nunoneto.codewars.utils.ColorHelper
 import pt.nunoneto.codewars.network.NetworkHelper
 
 object ChallengesRepository {
@@ -36,9 +33,18 @@ object ChallengesRepository {
                 .singleOrError()
     }
 
+    fun getChallengeDetails(challengeId: String) : Single<ChallengeDetails> {
+        return NetworkHelper.serviceInstance
+                .getChallenge(challengeId)
+                .map { response ->
+                    ChallengeDetails.fromResponse(response, getLanguages(response.languages))
+                }
+                .singleOrError()
+    }
+
     private fun getLanguages(languageList: List<String>) : List<Language> {
         return languageList.asIterable()
                 .map { languageString ->
-                    Language(languageString, LanguageColorHelper.getColorForLanguage(languageString))}
+                    Language(languageString, ColorHelper.getColorForLanguage(languageString))}
     }
 }

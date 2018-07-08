@@ -2,6 +2,9 @@ package pt.nunoneto.codewars.ui.challenges.list.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -9,9 +12,12 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import pt.nunoneto.codewars.entities.AuthoredChallenge
 import pt.nunoneto.codewars.entities.Challenge
+import pt.nunoneto.codewars.entities.CompletedChallenge
 import pt.nunoneto.codewars.entities.CompletedChallengePage
 import pt.nunoneto.codewars.repository.ChallengesRepository
+import pt.nunoneto.codewars.ui.challenges.details.ChallengeDetailsActivity
 import pt.nunoneto.codewars.ui.challenges.list.ChallengesListFragment
+import pt.nunoneto.codewars.utils.IntentValues
 
 class ChallengeListViewModel (val username: String, val challengeType: Int) : ViewModel() {
 
@@ -96,5 +102,15 @@ class ChallengeListViewModel (val username: String, val challengeType: Int) : Vi
         }
 
         doLoadPage()
+    }
+
+    fun onChallengeSelected(challenge: Challenge, context: Context?) {
+        if (context == null) {
+            return
+        }
+
+        var intent = Intent(context, ChallengeDetailsActivity::class.java)
+        intent.putExtra(IntentValues.EXTRA_CHALLENGE_ID, challenge.id)
+        context.startActivity(intent)
     }
 }

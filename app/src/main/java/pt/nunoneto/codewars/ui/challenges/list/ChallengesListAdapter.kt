@@ -1,13 +1,16 @@
 package pt.nunoneto.codewars.ui.challenges.list
 
 import android.content.res.ColorStateList
+import android.os.Build
 import android.support.design.chip.Chip
 import android.support.design.chip.ChipGroup
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.synthetic.main.challenge_details_fragment.*
 import pt.nunoneto.codewars.R
 import pt.nunoneto.codewars.entities.AuthoredChallenge
 import pt.nunoneto.codewars.entities.Challenge
@@ -33,11 +36,15 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
     var adapterMode = ADAPTER_LOAD_MORE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == LOAD_MORE_ITEM) {
+        var viewHolder = if (viewType == LOAD_MORE_ITEM) {
             LoadMoreViewHolder(inflater.inflate(R.layout.challenge_load_more_item, parent, false))
         } else {
             ChallengeViewHolder(inflater.inflate(R.layout.challenge_list_item, parent, false))
         }
+
+        viewHolder.itemView.setOnClickListener(fragment)
+
+        return viewHolder
     }
 
     // Last item is the Load More item
@@ -97,7 +104,11 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
         challengeViewHolder.name.text = challenge.name
 
         //description
-        challengeViewHolder.subtitle.text = challenge.description
+        challengeViewHolder.subtitle.text =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(challenge.description, Html.FROM_HTML_MODE_COMPACT)
+        } else {
+            Html.fromHtml(challenge.description)
+        }
 
         // languages
         var index = -1
@@ -117,7 +128,7 @@ class ChallengesListAdapter(private val fragment: ChallengesListFragment) : Recy
         val view: View? = viewHolder.languagesWrapper.getChildAt(index)
         val chip: Chip
         if (view == null) {
-            chip = inflater.inflate(R.layout.language_chip, viewHolder.languagesWrapper, false) as Chip
+            chip = inflater.inflate(R.layout.generic_chip, viewHolder.languagesWrapper, false) as Chip
             viewHolder.languagesWrapper.addView(chip)
         } else {
             chip = view as Chip

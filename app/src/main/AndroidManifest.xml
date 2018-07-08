@@ -22,8 +22,12 @@
         </activity>
 
         <activity android:name=".ui.challenges.ChallengesActivity"
-                    android:resizeableActivity="false"
-                    tools:targetApi="n" />
+            android:resizeableActivity="false"
+            tools:targetApi="n" />
+
+        <activity android:name=".ui.challenges.details.ChallengeDetailsActivity"
+            android:resizeableActivity="false"
+            tools:targetApi="n" />
 
     </application>
 

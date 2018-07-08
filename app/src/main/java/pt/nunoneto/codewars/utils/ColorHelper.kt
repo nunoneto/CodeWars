@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.support.annotation.ColorInt
 import java.util.*
 
-object LanguageColorHelper {
+object ColorHelper {
 
     var colorMap = HashMap<String, Int>()
     private val random = Random()
@@ -21,8 +21,7 @@ object LanguageColorHelper {
     }
 
     @ColorInt
-    private fun getRandomColor() : Int {
+    fun getRandomColor() : Int {
         return Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255))
     }
-
 }
