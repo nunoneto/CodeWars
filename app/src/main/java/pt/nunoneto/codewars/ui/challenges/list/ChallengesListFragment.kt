@@ -84,6 +84,16 @@ class ChallengesListFragment : Fragment() {
             noMorePages ->
                 if (noMorePages == true)  noMorePages()
         })
+
+        viewModel.error.observe(this, Observer<Boolean> {
+            error -> if (error == true)  onError()
+        })
+    }
+
+    private fun onError() {
+        pb_loading_challenges.visibility = View.GONE
+        tv_error.setText(R.string.error_load_challenges)
+        tv_error.visibility = View.VISIBLE
     }
 
     private fun noMorePages() {
@@ -97,6 +107,17 @@ class ChallengesListFragment : Fragment() {
     private fun updateAdapter(challengesList: List<Challenge>?) {
         if (challengesList == null) {
             return
+        }
+
+        if (challengesAdapter.challenges.isEmpty() && challengesList.isEmpty()) {
+            tv_error.setText(R.string.challenges_no_results)
+            tv_error.visibility = View.VISIBLE
+            rv_challenges.visibility = View.GONE
+            pb_loading_challenges.visibility = View.GONE
+            return
+        } else {
+            tv_error.visibility = View.GONE
+            rv_challenges.visibility = View.VISIBLE
         }
 
         if (challengesAdapter.challenges.isEmpty()) {

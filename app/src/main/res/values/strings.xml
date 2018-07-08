@@ -24,5 +24,7 @@
     <!-- Challenges -->
     <string name="completed_at">Completed at %1$S</string>
     <string name="no_more_results">No more results</string>
+    <string name="error_load_challenges">Could not load results</string>
+    <string name="challenges_no_results">No results found</string>
 
 </resources>

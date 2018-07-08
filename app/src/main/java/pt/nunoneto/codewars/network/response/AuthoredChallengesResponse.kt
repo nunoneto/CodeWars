@@ -5,8 +5,8 @@ data class AuthoredChallengesResponse (val data: List<AuthoredChallengesResponse
     data class AuthoredChallengesResponseItem(val id: String,
                                               val name: String,
                                               val description: String,
-                                              val rank: Int,
-                                              val rankName: String,
+                                              val rank: Int?,
+                                              val rankName: String?,
                                               val tags: List<String>,
                                               val languages: List<String>)
 }

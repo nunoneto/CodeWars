@@ -5,8 +5,8 @@ import pt.nunoneto.codewars.network.response.AuthoredChallengesResponse
 class AuthoredChallenge (id: String,
                           name: String,
                           val description:String,
-                          val rank: Int,
-                          val rankName: String,
+                          val rank: Int?,
+                          val rankName: String?,
                           val tags: List<String>,
                           languages: List<Language>) : Challenge(id, name, languages) {
 
